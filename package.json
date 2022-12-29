@@ -1,0 +1,35 @@
+{
+  "name": "type-install",
+  "version": "1.0.0",
+  "description": "Typescript Exercise",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint . --ext .ts --fix",
+    "prettier": "npx prettier --write 'src/'",
+    "build": "npx tsc",
+    "jasmine": "jasmine",
+    "test": "npm run build && npm run jasmine"
+  },
+  "keywords": [],
+  "author": "Obodo David",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jasmine": "^4.3.1",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.11.18",
+    "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
+    "eslint": "^8.30.0",
+    "prettier": "2.8.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "axios": "^1.2.1",
+    "jasmine": "^4.5.0",
+    "jasmine-spec-reporter": "^7.0.0",
+    "lodash": "^4.17.21",
+    "supertest": "^6.3.3"
+  }
+}
