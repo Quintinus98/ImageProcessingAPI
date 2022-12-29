@@ -1,10 +1,5 @@
-# Typescript-init
+# Image Processing API
 
-Starter code for setting up a typescript project.
-
-The code configures eslint and prettier to format code.
-
-It also features Jasmine tests for testing your code.
-
+Processes an Image and returns a resized image according to specs given.
 
 **More features coming soon**
