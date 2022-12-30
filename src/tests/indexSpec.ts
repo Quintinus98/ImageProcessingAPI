@@ -1,14 +1,30 @@
-import express from 'express';
-import { URLSearchParams } from 'url';
-import routes from '../routes';
-import imageResize from '../utilities/imageResize';
+import fs from 'fs';
+import path from 'path';
+import supertest from "supertest";
+import app from "../index";
 
-describe('Image is processed', () => {
-    const url =
-    'http://localhost:3000/api/images?filename=encenadaport&width=100&height=200';
-    const params = new URLSearchParams(url);
+const request = supertest(app);
 
-    it('should return a resized image in the thumb folder', () => {
-        expect();
-    });
+describe("Test endpoint responses", () => {
+  it("gets the api endpoint for home directory", async () => {
+    const response = await request.get("/");
+    expect(response.status).toBe(200);
+  });
+
+  it("gets an empty object if no query string is passed.", async () => {
+    const response = await request.get("/api/images");
+    expect(response.body).toEqual({});
+  });
+
+  it("tests if the image is processed and returned successfully. Gets an image buffer", async () => {
+    const response = await request.get(
+      "/api/images?filename=palmtunnel&width=100&height=100"
+    );
+    expect(response.body).toBeInstanceOf(Buffer);
+    // Remove the test thumb file.
+    fs.unlink(path.resolve(__dirname, `../assets/thumb/palmtunnel_thumb.jpg`), (err) => {
+        if (err) throw err;
+    })
+  });
+  
 });
