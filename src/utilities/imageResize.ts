@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
-import sharp from "sharp";
 import fs from "fs";
+import sharpFunc from "./sharpFunc";
 
 function imageResize(
   req: express.Request,
@@ -15,27 +15,31 @@ function imageResize(
   const width = parseInt(data.width as string);
   const height = parseInt(data.height as string);
 
+  // Image paths for input and output.
   const imagePath = path.resolve(__dirname, `../assets/full/${filename}.jpg`);
   const outImagePath = path.resolve(
     __dirname,
     `../assets/thumb/${filename}_thumb.jpg`
   );
 
-  // Using sharp to resize the image.
-  if (fs.existsSync(outImagePath)) {
-    console.log("File already resized");
-  } else if (fs.existsSync(imagePath)) {
-    process.nextTick(() => {
-      sharp(imagePath)
-        .rotate()
-        .resize(width, height)
-        .jpeg({ mozjpeg: true })
-        .toFile(outImagePath, () => {
-          console.log("File was resized successfully");
-          res.sendFile(outImagePath);
-        });
-    });
-  } else {
+  // Check if width and height are positive numbers (not necessarily Integers -
+  // since sharp converts float to integers).
+  if (
+    width <= 0 ||
+    height <= 0 ||
+    Number.isNaN(width) ||
+    Number.isNaN(height)
+  ) {
+    console.error("Invalid Query string.")
+    res.send("Invalid width or height parameter passed to query string.");
+  }
+  // Emit resized image.
+  else if (fs.existsSync(outImagePath)) console.log("File already resized");
+  // Resize Image if not previously resized.
+  else if (fs.existsSync(imagePath))
+    sharpFunc(imagePath, outImagePath, width, height, res);
+  // Check if filename exists, if not throw error.
+  else {
     console.error("File does not exist");
     res.send("Failed to get Image, check if Image exists and try again.");
   }

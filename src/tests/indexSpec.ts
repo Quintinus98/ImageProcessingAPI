@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 import supertest from "supertest";
 import app from "../index";
 
@@ -17,14 +17,18 @@ describe("Test endpoint responses", () => {
   });
 
   it("tests if the image is processed and returned successfully. Gets an image buffer", async () => {
-    const response = await request.get(
+    const outImagePath = path.resolve(
+      __dirname,
+      "../assets/thumb/palmtunnel_thumb.jpg"
+    );
+    if (fs.existsSync(outImagePath)) {
+      fs.unlink(outImagePath, (err) => {
+        if (err) throw err;
+      });
+    }
+    await request.get(
       "/api/images?filename=palmtunnel&width=100&height=100"
     );
-    expect(response.body).toBeInstanceOf(Buffer);
-    // Remove the test thumb file.
-    fs.unlink(path.resolve(__dirname, `../assets/thumb/palmtunnel_thumb.jpg`), (err) => {
-        if (err) throw err;
-    })
+    expect(fs.existsSync(outImagePath)).toBe(true);
   });
-  
 });
