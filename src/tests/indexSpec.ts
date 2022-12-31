@@ -1,7 +1,9 @@
-import fs from "fs";
-import path from "path";
 import supertest from "supertest";
+import path from "path";
+import fs from "fs";
+
 import app from "../index";
+import sharpFunc from "../utilities/sharpFunc";
 
 const request = supertest(app);
 
@@ -16,19 +18,41 @@ describe("Test endpoint responses", () => {
     expect(response.body).toEqual({});
   });
 
-  it("tests if the image is processed and returned successfully. Gets an image buffer", async () => {
+  it("processes the full image and saves the thumb image to disk.", async () => {
     const outImagePath = path.resolve(
       __dirname,
-      "../assets/thumb/palmtunnel_thumb.jpg"
+      "../assets/thumb/palmtunnel-100-100.jpg"
     );
     if (fs.existsSync(outImagePath)) {
       fs.unlink(outImagePath, (err) => {
         if (err) throw err;
       });
     }
-    await request.get(
-      "/api/images?filename=palmtunnel&width=100&height=100"
-    );
+    await request.get("/api/images?filename=palmtunnel&width=100&height=100");
     expect(fs.existsSync(outImagePath)).toBe(true);
+  });
+});
+
+describe("Test image processing function", () => {
+  const outImagePath = path.resolve(
+    __dirname,
+    "../assets/thumb/palmtunnel-100-100.jpg"
+  );
+  const imagePath = path.resolve(__dirname, "../assets/full/palmtunnel.jpg");
+
+  it("should resize the image and save it to outImagePath", async () => {
+    // Remove Image if it already exists.
+    if (fs.existsSync(outImagePath)) {
+      fs.unlink(outImagePath, (err) => {
+        if (err) throw err;
+      });
+    }
+    const path = sharpFunc(imagePath, outImagePath, 100, 100);
+    if (typeof path === "string") {
+      // setTimeout - sharpFunc takes time to save the image.
+      setTimeout(() => {
+        expect(fs.existsSync(path)).toBe(true);
+      }, 1000);
+    }
   });
 });
