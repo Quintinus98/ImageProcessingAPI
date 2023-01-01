@@ -21,6 +21,8 @@ function sharpFunc(
     .resize(width, height)
     .jpeg({ mozjpeg: true })
     .toFile(outImagePath, () => {
+      // The callback waits for the outImagePath to complete
+      // before calling the res.sendFile.
       if (res) res.sendFile(outImagePath);
     });
 

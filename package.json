@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/index.ts",
-    "lint": "eslint . --ext .ts --fix",
+    "lint": "eslint . --ext .ts",
     "prettier": "npx prettier --write src/",
-    "build": "npx tsc && cp -r src/assets/ dist/",
+    "build": "npx tsc && cp -r src/assets/ dist/ && rm -r dist/assets/thumb && mkdir dist/assets/thumb",
     "jasmine": "jasmine",
     "test": "npm run build && npm run jasmine"
   },

@@ -23,10 +23,9 @@ describe("Test endpoint responses", () => {
       __dirname,
       "../assets/thumb/palmtunnel-100-100.jpg"
     );
+    // Remove Image if it already exists.
     if (fs.existsSync(outImagePath)) {
-      fs.unlink(outImagePath, (err) => {
-        if (err) throw err;
-      });
+      fs.unlinkSync(outImagePath);
     }
     await request.get("/api/images?filename=palmtunnel&width=100&height=100");
     expect(fs.existsSync(outImagePath)).toBe(true);
@@ -43,9 +42,7 @@ describe("Test image processing function", () => {
   it("should resize the image and save it to outImagePath", async () => {
     // Remove Image if it already exists.
     if (fs.existsSync(outImagePath)) {
-      fs.unlink(outImagePath, (err) => {
-        if (err) throw err;
-      });
+      fs.unlinkSync(outImagePath);
     }
     const path = sharpFunc(imagePath, outImagePath, 100, 100);
     if (typeof path === "string") {

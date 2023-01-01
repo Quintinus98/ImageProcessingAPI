@@ -6,19 +6,23 @@ import imageResize from "../utilities/imageResize";
 const routes = express.Router();
 
 // Route to get the image.
-routes.get("/images", imageResize, (req, res) => {
-  const filename = req.query.filename as string;
-  const width = parseInt(req.query.width as string);
-  const height = parseInt(req.query.height as string);
+routes.get(
+  "/images",
+  imageResize,
+  (req: express.Request, res: express.Response): void => {
+    const filename = req.query.filename as string;
+    const width = parseInt(req.query.width as string);
+    const height = parseInt(req.query.height as string);
 
-  const outImagePath = path.resolve(
-    __dirname,
-    `../assets/thumb/${filename}-${width}-${height}.jpg`
-  );
+    const outImagePath = path.resolve(
+      __dirname,
+      `../assets/thumb/${filename}-${width}-${height}.jpg`
+    );
 
-  if (fs.existsSync(outImagePath)) {
-    res.sendFile(outImagePath);
+    if (fs.existsSync(outImagePath)) {
+      res.sendFile(outImagePath);
+    }
   }
-});
+);
 
 export default routes;
